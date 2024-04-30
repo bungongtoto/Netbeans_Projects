@@ -1,0 +1,5 @@
+moduledatabase/entities/User.class
+moduledatabase/services/UserService.class
+moduledatabase/services/UserServiceImpl.class
+com/mycompany/moduledatabase/JakartaRestConfiguration.class
+com/mycompany/moduledatabase/resources/JakartaEE91Resource.class

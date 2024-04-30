@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f = "http://java.sun.com/jsf/core">
+    <h:head>
+        <title>JSF TEST</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library = "css" name = "styles.css"  />
+    </h:head>
+    <h:body>
+        <h:outputText value="User Table" style="font-size: 100px"/>
+        <h:form>
+            <h:dataTable  value = "#{userServiceImpl.findAll()}" var = "user"
+                styleClass = "userTable"
+                headerClass = "userTableHeader"
+                rowClasses = "userTableOddRow, userTableEvenRow"
+             >
+                 <h:column>    				
+                    <f:facet name = "header">ID</f:facet>    				
+                    #{user.id}
+                 </h:column>
+
+                 <h:column>
+                    <f:facet name = "header">First</f:facet>
+                    #{user.first}
+                 </h:column>
+
+                 <h:column>
+                    <f:facet name = "header">Last</f:facet>
+                    #{user.last}
+                 </h:column>
+
+                 <h:column>
+                    <f:facet name = "header">Age</f:facet>
+                    #{user.age}
+                 </h:column>
+            </h:dataTable>
+        </h:form>
+        
+        
+    </h:body>
+</html>
