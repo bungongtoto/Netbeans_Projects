@@ -3,6 +3,6 @@
     <!-- Define Persistence Unit -->
     <persistence-unit name="my_persistence_unit" transaction-type="JTA">
         <jta-data-source>jdbc/TestDB</jta-data-source>
-        <class>com.mcom.mycompany.jsf.resources.entities.User</class> 
+        <class>com.mycompany.jsf.resources.entities.User</class> 
     </persistence-unit>
 </persistence>

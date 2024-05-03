@@ -1,4 +1,3 @@
-
 package com.mycompany.jsf.resources.entities;
 
 import java.io.Serializable;

@@ -25,17 +25,31 @@
             <version>${jakartaee}</version>
             <scope>provided</scope>
         </dependency>
+        
         <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-api</artifactId>
-      <version>2.2.20</version>
-   </dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.2.20</version>
+         </dependency>
 	
-   <dependency>
-      <groupId>com.sun.faces</groupId>
-      <artifactId>jsf-impl</artifactId>
-      <version>2.2.20</version>
-   </dependency>
+        <dependency>
+           <groupId>com.sun.faces</groupId>
+           <artifactId>jsf-impl</artifactId>
+           <version>2.2.20</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>13.0.3</version>
+            <classifier>jakarta</classifier>
+        </dependency>
     </dependencies>
     
     <build>
