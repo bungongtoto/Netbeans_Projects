@@ -1,0 +1,38 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" >
+    <h:head>
+        <title>Sign Up</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name = "login_styles.css"  />
+    </h:head>
+    <h:body>
+        <div class="login_container" >
+            <h:graphicImage library="images" name="camtel_logo.png" class="float-image" alt="Floating Image of Camtel logo" width="100px" height="100px" />
+  
+            <h:form class="login_form" id="form" onreset="#{authView.openNew()}"  >
+                     <p:messages id="messages" />
+                
+                     <span class="ui-float-label">
+                         <p:inputText style="width: 100%"  id="username" value="#{authView.authUser.username}" required="true" />
+                        <p:outputLabel for="@previous" value="Username"/>
+                      </span>
+                      <p:messages for="username" />
+                      
+                      <span class="ui-float-label">
+                          <p:password style="width: 100%" id="password" value="#{authView.authUser.password}" toggleMask="true" redisplay="true" required="true" />
+                          <p:outputLabel for="@previous" value="Password"/>
+                       </span>
+                       <p:messages for="password" />
+                    
+                       <p:commandButton  value="Sign Up" styleClass="rounded-button ui-button-info"  update=":form:messages" action="#{authView.signUp()}" />
+                
+                <span style="display: flex; justify-content: space-around">
+                    <h:outputText value="have an account already ?" />
+                    <p:link outcome="index.xhtml"  value="login"></p:link>
+
+                </span>
+            </h:form>
+        </div>
+    </h:body>
+</html>
