@@ -3,7 +3,6 @@ package services;
 import entities.User;
 import jakarta.ejb.Stateless;
 import jakarta.faces.bean.ManagedBean;
-import jakarta.faces.bean.SessionScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
@@ -12,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 @ManagedBean(name="userService", eager=true)
-@SessionScoped
 @Stateless
 public class UserService {
     @PersistenceContext(name ="my_persistence_unit")

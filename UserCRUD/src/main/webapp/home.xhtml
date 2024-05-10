@@ -6,125 +6,144 @@
     <h:head>
         <title>User CRUD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name = "home_styles.css"  />
     </h:head>
-    <h:body>
-        <div class="card crud-demo">
-             <h:form id="form">
-                <p:growl id="messages" showDetail="true" />
-
-                <p:toolbar>
-                    <p:toolbarGroup>
-                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{crudView.openNew}"
-                            update=":dialogs:manage-user-content" oncomplete="PF('manageUserDialog').show()"
-                            styleClass="ui-button-success" style="margin-right: .5rem">
-                            <p:resetInput target=":dialogs:manage-user-content" />
-                        </p:commandButton>
-                        <p:commandButton id="delete-users-button" value="#{crudView.deleteButtonMessage}"
-                            icon="pi pi-trash" actionListener="#{crudView.deleteSelectedUsers}"
-                            styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedUsers()}" update="@this">
-                            <p:confirm header="Confirmation" message="Delete the selected users?"
-                                icon="pi pi-exclamation-triangle" />
-                        </p:commandButton>
-                    </p:toolbarGroup>
-                    <p:toolbarGroup align="right">
-                        <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
-                            <p:dataExporter type="csv" target="dt-users" fileName="users" />
-                        </p:commandButton>
-                    </p:toolbarGroup>
-                </p:toolbar>
-
-                <p:dataTable id="dt-users" widgetVar="dtUsers" var="user" value="#{crudView.users}"
-                    reflow="true" styleClass="users-table" selection="#{crudView.selectedUsers}"
-                    rowKey="#{user.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
-                    <f:facet name="header">
-                        <div class="users-table-header">
-                            <span style="font-weight: bold">PRODUCTS</span>
-                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
-                                <p:inputText id="globalFilter" onkeyup="PF('dtUsers').filter()" placeholder="Search" />
-                            </span>
+    <h:body>   
+                <div class="card crud-demo">
+                     <header class="home_header" >
+                        <div>
+                             <h:graphicImage library="images" name="camtel_logo.png" class="float-image" alt="Floating Image of Camtel logo" width="100px" height="100px" />
                         </div>
-                    </f:facet>
 
-                    <p:ajax event="rowSelect" update=":form:delete-users-button" />
-                    <p:ajax event="rowUnselect" update=":form:delete-users-button" />
-                    <p:ajax event="rowSelectCheckbox" update=":form:delete-users-button" />
-                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-users-button" />
-                    <p:ajax event="toggleSelect" update=":form:delete-users-button" />
+                        <div >
+                            <h:form>
+                                <p:commandButton  value="Logout" styleClass="rounded-button ui-button-info" action="#{authView.logout()}" />
+                            </h:form>
+                        </div>
 
-                    <p:column  selectionMode="multiple" exportable="false" style="width: 30px"></p:column>
+                    </header>
+                    <main>
+                         <h:form id="form">
+                                <p:growl id="messages" showDetail="true" />
 
-                    <p:column headerText="ID" sortBy="#{user.id}" filterBy="#{user.id}">
-                        <h:outputText value="#{user.id}" />
-                    </p:column>
-                    <p:column headerText="First Name" sortBy="#{user.first}" filterBy="#{user.first}">
-                        <h:outputText value="#{user.first}" />
-                    </p:column>
-                     <p:column headerText="Last Name" sortBy="#{user.last}" filterBy="#{user.last}">
-                        <h:outputText value="#{user.last}" />
-                    </p:column>
-                    <p:column headerText="Age (years)" sortBy="#{user.age}" filterBy="#{user.age}">
-                        <h:outputText value="#{user.age}" />
-                    </p:column>
-                    
-                    <p:column exportable="false">
-                        <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-user-content"
-                            oncomplete="PF('manageUserDialog').show()"
-                            styleClass="edit-button rounded-button ui-button-success" process="@this">
-                            <f:setPropertyActionListener value="#{user}" target="#{crudView.selectedUser}" />
-                            <p:resetInput target=":dialogs:manage-user-content" />
-                        </p:commandButton>
-                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
-                                         process="@this"
-                                         oncomplete="PF('deleteUserDialog').show()">
-                            <f:setPropertyActionListener value="#{user}" target="#{crudView.selectedUser}" />
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-            
-             <h:form id="dialogs">
-                <p:dialog header="User Details" showEffect="fade" modal="true" widgetVar="manageUserDialog"
-                    responsive="true">
-                    <p:outputPanel id="manage-user-content" class="ui-fluid">
-                        <p:outputPanel rendered="#{not empty crudView.selectedUser}">
-                            <div class="field">
-                                <p:outputLabel for="first">First Name</p:outputLabel>
-                                <p:inputText id="first" value="#{crudView.selectedUser.first}" required="true" />
-                            </div>
-                            <div class="field">
-                                <p:outputLabel for="last">Last Name</p:outputLabel>
-                                <p:inputText id="last" value="#{crudView.selectedUser.last}" />
-                            </div>
-                            <div class="field">
-                                <p:outputLabel for="age">Age</p:outputLabel>
-                                <p:spinner id="age" min="0" max="150" value="#{crudView.selectedUser.age}" />
-                            </div>
-                        </p:outputPanel>
-                    </p:outputPanel>
+                                <p:toolbar>
+                                    <p:toolbarGroup>
+                                        <p:commandButton value="New" icon="pi pi-plus" actionListener="#{crudView.openNew}"
+                                            update=":dialogs:manage-user-content" oncomplete="PF('manageUserDialog').show()"
+                                            styleClass="ui-button-success" style="margin-right: .5rem">
+                                            <p:resetInput target=":dialogs:manage-user-content" />
+                                        </p:commandButton>
+                                        <p:commandButton id="delete-users-button" value="#{crudView.deleteButtonMessage}"
+                                            icon="pi pi-trash" actionListener="#{crudView.deleteSelectedUsers}"
+                                            styleClass="ui-button-danger" disabled="#{!crudView.hasSelectedUsers()}" update="@this">
+                                            <p:confirm header="Confirmation" message="Delete the selected users?"
+                                                icon="pi pi-exclamation-triangle" />
+                                        </p:commandButton>
+                                    </p:toolbarGroup>
+                                    <p:toolbarGroup align="right">
+                                        <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                                            <p:dataExporter type="csv" target="dt-users" fileName="users" />
+                                        </p:commandButton>
+                                    </p:toolbarGroup>
+                                </p:toolbar>
 
-                    <f:facet name="footer">
-                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{crudView.saveUser}"
-                            update="manage-user-content" process="manage-user-content @this" />
-                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
-                            class="ui-button-secondary" type="button" />
-                    </f:facet>
-                </p:dialog>
+                                <p:dataTable id="dt-users" widgetVar="dtUsers" var="user" value="#{crudView.users}"
+                                    reflow="true" styleClass="users-table" selection="#{crudView.selectedUsers}"
+                                    rowKey="#{user.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                                    <f:facet name="header">
+                                        <div class="users-table-header">
+                                            <span style="font-weight: bold">PRODUCTS</span>
+                                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                                <p:inputText id="globalFilter" onkeyup="PF('dtUsers').filter()" placeholder="Search" />
+                                            </span>
+                                        </div>
+                                    </f:facet>
 
-                <p:confirmDialog widgetVar="deleteUserDialog" showEffect="fade" width="300"
-                    message="Delete the user?" header="Confirm" severity="warn">
-                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{crudView.deleteUser}"
-                        process="@this" update=":form:delete-users-button"
-                        oncomplete="PF('deleteUserDialog').hide()" />
-                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
-                        onclick="PF('deleteUserDialog').hide()" />
-                </p:confirmDialog>
+                                    <p:ajax event="rowSelect" update=":form:delete-users-button" />
+                                    <p:ajax event="rowUnselect" update=":form:delete-users-button" />
+                                    <p:ajax event="rowSelectCheckbox" update=":form:delete-users-button" />
+                                    <p:ajax event="rowUnselectCheckbox" update=":form:delete-users-button" />
+                                    <p:ajax event="toggleSelect" update=":form:delete-users-button" />
 
-                <p:confirmDialog global="true" showEffect="fade" width="300">
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
-                        icon="pi pi-times" />
-                </p:confirmDialog>
-            </h:form>
-        </div>
+                                    <p:column  selectionMode="multiple" exportable="false" style="width: 30px"></p:column>
+
+                                    <p:column headerText="ID" sortBy="#{user.id}" filterBy="#{user.id}">
+                                        <h:outputText value="#{user.id}" />
+                                    </p:column>
+                                    <p:column headerText="User Name" sortBy="#{user.username}" filterBy="#{user.username}">
+                                        <h:outputText value="#{user.username}" />
+                                    </p:column>
+                                    <p:column headerText="First Name" sortBy="#{user.first}" filterBy="#{user.first}">
+                                        <h:outputText value="#{user.first}" />
+                                    </p:column>
+                                     <p:column headerText="Last Name" sortBy="#{user.last}" filterBy="#{user.last}">
+                                        <h:outputText value="#{user.last}" />
+                                    </p:column>
+                                    <p:column headerText="Age (years)" sortBy="#{user.age}" filterBy="#{user.age}">
+                                        <h:outputText value="#{user.age}" />
+                                    </p:column>
+
+                                    <p:column exportable="false">
+                                        <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-user-content"
+                                            oncomplete="PF('manageUserDialog').show()"
+                                            styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                            <f:setPropertyActionListener value="#{user}" target="#{crudView.selectedUser}" />
+                                            <p:resetInput target=":dialogs:manage-user-content" />
+                                        </p:commandButton>
+                                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                                         process="@this"
+                                                         oncomplete="PF('deleteUserDialog').show()">
+                                            <f:setPropertyActionListener value="#{user}" target="#{crudView.selectedUser}" />
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+
+                             <h:form id="dialogs">
+                                <p:dialog header="User Details" showEffect="fade" modal="true" widgetVar="manageUserDialog"
+                                    responsive="true">
+                                    <p:outputPanel id="manage-user-content" class="ui-fluid">
+                                        <p:outputPanel rendered="#{not empty crudView.selectedUser}">
+                                            <div class="field">
+                                                <p:outputLabel for="first">First Name</p:outputLabel>
+                                                <p:inputText id="first" value="#{crudView.selectedUser.first}" required="true" />
+                                            </div>
+                                            <div class="field">
+                                                <p:outputLabel for="last">Last Name</p:outputLabel>
+                                                <p:inputText id="last" value="#{crudView.selectedUser.last}" />
+                                            </div>
+                                            <div class="field">
+                                                <p:outputLabel for="age">Age</p:outputLabel>
+                                                <p:spinner id="age" min="0" max="150" value="#{crudView.selectedUser.age}" />
+                                            </div>
+                                        </p:outputPanel>
+                                    </p:outputPanel>
+
+                                    <f:facet name="footer">
+                                        <p:commandButton value="Save" icon="pi pi-check" actionListener="#{crudView.saveUser}"
+                                            update="manage-user-content" process="manage-user-content @this" />
+                                        <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageUserDialog').hide()"
+                                            class="ui-button-secondary" type="button" />
+                                    </f:facet>
+                                </p:dialog>
+
+                                <p:confirmDialog widgetVar="deleteUserDialog" showEffect="fade" width="300"
+                                    message="Delete the user?" header="Confirm" severity="warn">
+                                    <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{crudView.deleteUser}"
+                                        process="@this" update=":form:delete-users-button"
+                                        oncomplete="PF('deleteUserDialog').hide()" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                        onclick="PF('deleteUserDialog').hide()" />
+                                </p:confirmDialog>
+
+                                <p:confirmDialog global="true" showEffect="fade" width="300">
+                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                        icon="pi pi-times" />
+                                </p:confirmDialog>
+                            </h:form>
+                    </main>
+               </div>
+        
     </h:body>
 </html>

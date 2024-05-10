@@ -1,13 +1,22 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body{
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
+    overflow-x: hidden; /* Optional: Hide horizontal scrollbar */
+    overflow-y: hidden;
 }
 
 .login_form{
     display: flex ;
-    height: 48vh;
+    height: 52vh;
     flex-direction: column;
     justify-content:  space-around;
     
@@ -17,7 +26,7 @@ body{
     border: black 2px double ;
     border-radius: 10px;
     width: 420px;
-    height: 50vh;
+    height: 55vh;
     padding: 20px;
     display: flex;
     flex-direction: column;
