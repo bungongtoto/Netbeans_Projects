@@ -4,5 +4,8 @@
     <persistence-unit name="my_persistence_unit" transaction-type="JTA" >
         <jta-data-source>jdbc/TestDB</jta-data-source>
         <class>entities.User</class>
+        <class>entities.Department</class>
+        <class>entities.PayRoll</class>
+        <class>entities.Employee</class>
     </persistence-unit>
 </persistence>

@@ -102,8 +102,6 @@ public class UserService {
         } catch (RuntimeException e) {
            
             throw e; // Re-throw the exception for caller to handle
-        }
-       
-        
+        } 
     }
 }

@@ -16,20 +16,19 @@ import java.util.TimerTask;
 import org.primefaces.PrimeFaces;
 import services.UserService;
 
-
 @Named("crudView")
 @ViewScoped
-public class CrudView implements Serializable{
-     private static final long serialVersionUID = 1L;
-     
-     
+public class CrudView implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private List<User> users;
 
     private User selectedUser;
 
     private List<User> selectedUsers;
-    
-     private Timer timer;
+
+    private Timer timer;
 
     @Inject
     private UserService userService;
@@ -39,7 +38,7 @@ public class CrudView implements Serializable{
         // Load initial data
         loadData();
         this.selectedUsers = new ArrayList<User>();
-        
+
         // Schedule a task to reload data every 30 seconds
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -48,13 +47,13 @@ public class CrudView implements Serializable{
                 loadData();
             }
         }, 30000, 30000); // 30 seconds delay, 30 seconds interval
-        
+
     }
-    
+
     public void loadData() {
         this.users = this.userService.findAll();
     }
-    
+
     public List<User> getUsers() {
         return users;
     }
@@ -80,12 +79,11 @@ public class CrudView implements Serializable{
     }
 
     public void saveUser() {
-        if ( this.selectedUser.getId() == 0) {
+        if (this.selectedUser.getId() == 0) {
             userService.createNewUser(selectedUser);
             loadData();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("User Added"));
-        }
-        else {
+        } else {
             userService.updateUser(selectedUser);
             loadData();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("User Updated"));
@@ -116,9 +114,9 @@ public class CrudView implements Serializable{
     public boolean hasSelectedUsers() {
         return this.selectedUsers != null && !this.selectedUsers.isEmpty();
     }
-    
-     public void deleteSelectedUsers() {
-        for(User user : this.selectedUsers){
+
+    public void deleteSelectedUsers() {
+        for (User user : this.selectedUsers) {
             userService.deleteUser(user.getId());
         }
         this.users.removeAll(this.selectedUsers);
@@ -131,6 +129,8 @@ public class CrudView implements Serializable{
     @PreDestroy
     public void cleanUp() {
         // Cancel the timer
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 }

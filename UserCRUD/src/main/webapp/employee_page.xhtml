@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core" >
+    <h:head>
+        <title>Employee CRUD</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name = "home_styles.css"  />
+    </h:head>
+    <h:body>
+        <div class="card crud-demo">
+            <header class="home_header" >
+                <div>
+                    <a href="home.xhtml" onclick="window.location.href = 'home.xhtml'; return false;">
+                        <h:graphicImage library="images" name="camtel_logo.png" alt="Floating Image of Camtel logo" width="100px" height="100px" />
+                    </a>
+
+                </div>
+
+                <div >
+                    <h:form>
+                        <p:commandButton  value="Logout" styleClass="rounded-button ui-button-info" action="#{authView.logout()}" />
+                    </h:form>
+                </div>
+
+            </header>
+            <main>
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true" />
+
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="New" icon="pi pi-plus" actionListener="#{employeeView.openNew}"
+                                             update=":dialogs:manage-employee-content" oncomplete="PF('manageEmployeeDialog').show()"
+                                             styleClass="ui-button-success" style="margin-right: .5rem">
+                                <p:resetInput target=":dialogs:manage-employee-content" />
+                            </p:commandButton>
+                            <p:commandButton id="delete-employees-button" value="#{employeeView.deleteButtonMessage}"
+                                             icon="pi pi-trash" actionListener="#{employeeView.deleteSelectedEmployees}"
+                                             styleClass="ui-button-danger" disabled="#{!employeeView.hasSelectedEmployees()}" update="@this">
+                                <p:confirm header="Confirmation" message="Delete the selected employees?"
+                                           icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                                <p:dataExporter type="csv" target="dt-employees" fileName="employees" />
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable id="dt-employees" widgetVar="dtEmployees" var="employee" value="#{employeeView.employees}"
+                                 reflow="true" styleClass="employees-table" selection="#{employeeView.selectedEmployees}"
+                                 rowKey="#{employee.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                        <f:facet name="header">
+                            <div class="employees-table-header">
+                                <span style="font-weight: bold">Employees</span>
+                                <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                    <p:inputText id="globalFilter" onkeyup="PF('dtEmployees').filter()" placeholder="Search" />
+                                </span>
+                            </div>
+                        </f:facet>
+
+                        <p:ajax event="rowSelect" update=":form:delete-employees-button" />
+                        <p:ajax event="rowUnselect" update=":form:delete-employees-button" />
+                        <p:ajax event="rowSelectCheckbox" update=":form:delete-employees-button" />
+                        <p:ajax event="rowUnselectCheckbox" update=":form:delete-employees-button" />
+                        <p:ajax event="toggleSelect" update=":form:delete-employees-button" />
+
+                        <p:column  selectionMode="multiple" exportable="false" style="width: 30px"></p:column>
+
+                        <p:column headerText="ID" sortBy="#{employee.id}" filterBy="#{employee.id}">
+                            <h:outputText value="#{employee.id}" />
+                        </p:column>
+
+                        <p:column headerText="Employee Name" sortBy="#{employee.name}" filterBy="#{employee.name}">
+                            <h:outputText value="#{employee.name}" />
+                        </p:column>
+
+                        <p:column headerText="Department Name" sortBy="#{employee.department.name}" filterBy="#{employee.department.name}">
+                            <h:outputText value="#{employee.department.name}" />
+                        </p:column>
+
+                        <p:column headerText="Job Title" sortBy="#{employee.payRoll.job_title}" filterBy="#{employee.payRoll.job_title}">
+                            <h:outputText value="#{employee.payRoll.job_title}" />
+                        </p:column>
+
+                        <p:column headerText="Salary (FCFA)" sortBy="#{employee.payRoll.salary}" filterBy="#{employee.payRoll.salary}">
+                            <h:outputText value="#{employee.payRoll.salary}" />
+                        </p:column>
+
+                        <p:column exportable="false">
+                            <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-employee-content"
+                                             oncomplete="PF('manageEmployeeDialog').show()"
+                                             styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                <f:setPropertyActionListener value="#{employee}" target="#{employeeView.selectedEmployee}" />
+                                <p:resetInput target=":dialogs:manage-employee-content" />
+                            </p:commandButton>
+                            <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                             process="@this"
+                                             oncomplete="PF('deleteEmployeeDialog').show()">
+                                <f:setPropertyActionListener value="#{employee}" target="#{employeeView.selectedEmployee}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="dialogs">
+                    <p:dialog header="Employee Details" showEffect="fade" modal="true" widgetVar="manageEmployeeDialog"
+                              responsive="true">
+                        <p:outputPanel id="manage-employee-content" class="ui-fluid">
+                            <p:outputPanel rendered="#{not empty employeeView.selectedEmployee}">
+                                <div class="field">
+                                    <p:outputLabel for="name" >Employee Name</p:outputLabel>
+                                    <p:inputText id="name" value="#{employeeView.selectedEmployee.name}" required="true" />
+                                </div>
+
+                                <div class="field ">
+                                    <p:outputLabel for="department" >Department</p:outputLabel>
+                                    <p:selectOneMenu   id="department"  value="#{employeeView.selectedEmployee.department}" converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" filterNormalize="true" required="true" >
+                                        <f:selectItem itemValue="" itemLabel="Select a Department" />
+                                        <f:selectItems value="#{employeeView.departments}" var="dept" itemValue="#{dept}" itemLabel="#{dept.name}"/>
+                                    </p:selectOneMenu >
+                                </div>
+                                <div class="field ">
+                                    <p:outputLabel for="payroll" >Pay Roll</p:outputLabel>
+                                    <p:selectOneMenu  id="payroll" value="#{employeeView.selectedEmployee.payRoll}" converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains" filterNormalize="true" required="true" >
+                                        <f:selectItem itemValue="" itemLabel="Select A payRoll" />
+                                        <f:selectItems  value="#{employeeView.payRolls}" var="payRoll" itemValue="#{payRoll}" itemLabel="#{payRoll.job_title}"/>
+                                    </p:selectOneMenu >
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="pi pi-check" actionListener="#{employeeView.saveEmployee}"
+                                             update="manage-employee-content" process="manage-employee-content @this" />
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageEmployeeDialog').hide()"
+                                             class="ui-button-secondary" type="button" />
+                        </f:facet>
+                    </p:dialog>
+
+                    <p:confirmDialog widgetVar="deleteEmployeeDialog" showEffect="fade" width="300"
+                                     message="Delete the employee?" header="Confirm" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{employeeView.deleteEmployee}"
+                                         process="@this" update=":form:delete-employees-button"
+                                         oncomplete="PF('deleteEmployeeDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteEmployeeDialog').hide()" />
+                    </p:confirmDialog>
+
+                    <p:confirmDialog global="true" showEffect="fade" width="300">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                         icon="pi pi-times" />
+                    </p:confirmDialog>
+                </h:form>
+            </main>
+        </div>
+    </h:body>
+</html>

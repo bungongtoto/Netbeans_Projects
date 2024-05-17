@@ -30,6 +30,14 @@ body {
   animation: float 5s ease-in-out infinite;
 }
 
+.hover-effect {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+  transform: scale(1.1);
+}
+
 .home_header{
   display: flex;
   flex-flow: row nowrap;
@@ -45,4 +53,52 @@ body {
   margin-bottom: 10px;
 }
 
+.container {
+  display: flex;
+  height: 80vh; /* Use viewport height for full screen height */
+}
 
+.left, .right {
+  flex: 1; /* Each div takes up equal space */
+}
+
+.left{
+  display: grid;
+  place-items: center;
+  height: 80vh; 
+}
+
+.polarAreaModel{
+   display: grid;
+   place-items: center;
+   height: 40vh;
+   width: 50vw;
+   
+}
+
+.chart {
+  width: 80%; 
+  height: 80%; 
+}
+
+.route_container{
+  width: 80%; 
+  height: 80%; 
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+
+.user, .department, .payroll, .employee {
+  width: 100%; 
+  height: 100%;
+  display: flex;
+  background-color: rgb(54, 162, 235);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  border-radius: 2rem;
+  color: white;
+}

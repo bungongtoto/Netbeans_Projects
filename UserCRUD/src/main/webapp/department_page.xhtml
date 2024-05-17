@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core" >
+    <h:head>
+        <title>Department CRUD</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputStylesheet library="css" name = "home_styles.css"  />
+    </h:head>
+    <h:body>
+        <div class="card crud-demo">
+            <header class="home_header" >
+                <div>
+                    <a href="home.xhtml" onclick="window.location.href = 'home.xhtml'; return false;">
+                        <h:graphicImage library="images" name="camtel_logo.png" alt="Floating Image of Camtel logo" width="100px" height="100px" />
+                    </a>
+                </div>
+
+                <div >
+                    <h:form>
+                        <p:commandButton  value="Logout" styleClass="rounded-button ui-button-info" action="#{authView.logout()}" />
+                    </h:form>
+                </div>
+
+            </header>
+            <main>
+                <h:form id="form">
+                    <p:growl id="messages" showDetail="true" />
+
+                    <p:toolbar>
+                        <p:toolbarGroup>
+                            <p:commandButton value="New" icon="pi pi-plus" actionListener="#{departmentView.openNew}"
+                                             update=":dialogs:manage-department-content" oncomplete="PF('manageDepartmentDialog').show()"
+                                             styleClass="ui-button-success" style="margin-right: .5rem">
+                                <p:resetInput target=":dialogs:manage-department-content" />
+                            </p:commandButton>
+                            <p:commandButton id="delete-departments-button" value="#{departmentView.deleteButtonMessage}"
+                                             icon="pi pi-trash" actionListener="#{departmentView.deleteSelectedDepartments}"
+                                             styleClass="ui-button-danger" disabled="#{!departmentView.hasSelectedDepartments()}" update="@this">
+                                <p:confirm header="Confirmation" message="Delete the selected departments?"
+                                           icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                                <p:dataExporter type="csv" target="dt-departments" fileName="departments" />
+                            </p:commandButton>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable id="dt-departments" widgetVar="dtDepartments" var="department" value="#{departmentView.departments}"
+                                 reflow="true" styleClass="departments-table" selection="#{departmentView.selectedDepartments}"
+                                 rowKey="#{department.id}" paginator="true" rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                        <f:facet name="header">
+                            <div class="departments-table-header">
+                                <span style="font-weight: bold">DEPARTMENTS</span>
+                                <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                                    <p:inputText id="globalFilter" onkeyup="PF('dtDepartments').filter()" placeholder="Search" />
+                                </span>
+                            </div>
+                        </f:facet>
+
+                        <p:ajax event="rowSelect" update=":form:delete-departments-button" />
+                        <p:ajax event="rowUnselect" update=":form:delete-departments-button" />
+                        <p:ajax event="rowSelectCheckbox" update=":form:delete-departments-button" />
+                        <p:ajax event="rowUnselectCheckbox" update=":form:delete-departments-button" />
+                        <p:ajax event="toggleSelect" update=":form:delete-departments-button" />
+
+                        <p:column  selectionMode="multiple" exportable="false" style="width: 30px"></p:column>
+
+                        <p:column headerText="ID" sortBy="#{department.id}" filterBy="#{department.id}">
+                            <h:outputText value="#{department.id}" />
+                        </p:column>
+                        <p:column headerText="Deparment Name" sortBy="#{department.name}" filterBy="#{department.name}">
+                            <h:outputText value="#{department.name}" />
+                        </p:column>
+
+                        <p:column exportable="false">
+                            <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-department-content"
+                                             oncomplete="PF('manageDepartmentDialog').show()"
+                                             styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                <f:setPropertyActionListener value="#{department}" target="#{departmentView.selectedDepartment}" />
+                                <p:resetInput target=":dialogs:manage-department-content" />
+                            </p:commandButton>
+                            <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                             process="@this"
+                                             oncomplete="PF('deleteDepartmentDialog').show()">
+                                <f:setPropertyActionListener value="#{department}" target="#{departmentView.selectedDepartment}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="dialogs">
+                    <p:dialog header="Department Details" showEffect="fade" modal="true" widgetVar="manageDepartmentDialog"
+                              responsive="true">
+                        <p:outputPanel id="manage-department-content" class="ui-fluid">
+                            <p:outputPanel rendered="#{not empty departmentView.selectedDepartment}">
+                                <div class="field">
+                                    <p:outputLabel for="name">Department Name</p:outputLabel>
+                                    <p:inputText id="name" value="#{departmentView.selectedDepartment.name}" required="true" />
+                                </div>
+                            </p:outputPanel>
+                        </p:outputPanel>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Save" icon="pi pi-check" actionListener="#{departmentView.saveDepartment}"
+                                             update="manage-department-content form:dt-departments" process="manage-department-content @this" />
+                            <p:commandButton value="Cancel" icon="pi pi-times" onclick="PF('manageDepartmentDialog').hide()"
+                                             class="ui-button-secondary" type="button" />
+                        </f:facet>
+                    </p:dialog>
+
+                    <p:confirmDialog widgetVar="deleteDepartmentDialog" showEffect="fade" width="300"
+                                     message="Delete the department?" header="Confirm" severity="warn">
+                        <p:commandButton value="Yes" icon="pi pi-check" actionListener="#{departmentView.deleteDepartment}"
+                                         process="@this" update=":form:delete-departments-button"
+                                         oncomplete="PF('deleteDepartmentDialog').hide()" />
+                        <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                         onclick="PF('deleteDepartmentDialog').hide()" />
+                    </p:confirmDialog>
+
+                    <p:confirmDialog global="true" showEffect="fade" width="300">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                         icon="pi pi-times" />
+                    </p:confirmDialog>
+                </h:form>
+            </main>
+        </div>
+    </h:body>
+</html>
